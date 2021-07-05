@@ -15,7 +15,7 @@ public interface InvoiceService {
 	Invoice getOneInvoice(Long id);
 	List<Invoice> getAllInvoices();
 	boolean isInvoiceExists(Long id);
-	Integer updateInvoiceByNumber(String number,Long id);
+	Integer updateInvoiceNumberById(String number,Long id);
 	
 	
 }
