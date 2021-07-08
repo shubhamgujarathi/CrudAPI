@@ -5,8 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +29,7 @@ public class InvoiceRestController {
 	@Autowired
 	private InvoiceUtil invoiceUtil;
 	
+	@PostMapping("/saveInvoice")
 	public ResponseEntity<String> saveInvoice(@RequestBody Invoice inv)
 	{
 		ResponseEntity<String> responseEntity=null;
@@ -79,6 +84,71 @@ public class InvoiceRestController {
 		}
 		return responseEntity;
 		
+	}
+	@DeleteMapping("/remove/{id}")
+	public ResponseEntity<String> deleteInvoice(@PathVariable Long id)
+	{
+		ResponseEntity<String> responseEntity=null;
+		try
+		{
+			invoiceService.deleteInvoice(id);
+			responseEntity=new ResponseEntity<String>("Invoice '"+id+"'deleted",HttpStatus.OK);
+		}
+		catch(InvoiceNotFoundException ine)
+		{
+			throw ine;
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			responseEntity=new ResponseEntity<String>("Unable to delete invoice",HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+		
+	}
+	@PutMapping("/update/{id}")
+	public ResponseEntity<String> updateInvoice(@PathVariable long id,@RequestBody Invoice invoice)
+	{
+		ResponseEntity<String> responseEntity=null;
+		try
+		{
+			Invoice inv=invoiceService.getOneInvoice(id);
+			invoiceUtil.copyNonNullValues(invoice, inv);
+			invoiceService.updateInvoice(inv);
+			responseEntity=new ResponseEntity<String>("Invoice'"+id+"'+Updated",HttpStatus.RESET_CONTENT);
+			}
+		catch(InvoiceNotFoundException ine)
+		{
+			throw ine;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			responseEntity=new ResponseEntity<String>("Unable to update invoice",HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+	}
+	@PatchMapping("/modify/{id}/{number}")
+	public ResponseEntity<String> updateInvoiceNumberById(@PathVariable Long id,@PathVariable String number)
+	{
+		ResponseEntity<String> responseEntity=null;
+		try
+		{
+			invoiceService.updateInvoiceNumberById(number, id);
+			responseEntity=new ResponseEntity<String>("Invoice'"+number+"'+Updated",HttpStatus.PARTIAL_CONTENT);
+		}
+		catch(InvoiceNotFoundException ine)
+		{
+			throw ine;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			responseEntity=new ResponseEntity<String>("Unable to update invoice",HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+		return responseEntity;
 	}
 }
 

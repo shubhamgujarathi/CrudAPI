@@ -6,20 +6,21 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.springboot.rest.entity.Invoice;
 import com.springboot.rest.exception.InvoiceNotFoundException;
 import com.springboot.rest.repo.Invoicerepository;
 import com.springboot.rest.service.InvoiceService;
 import com.springboot.rest.util.InvoiceUtil;
-
+@Service
 public class InvoiceServiceImpl implements InvoiceService {
 	
 	
-	@Autowired
+	@Autowired(required=true)
 	private Invoicerepository invoiceRepository; 
 	
-	@Autowired
+	@Autowired(required=true)
 	private InvoiceUtil invoiceUtil;
 
 	@Override

@@ -1,7 +1,10 @@
 package com.springboot.rest.util;
 
+import org.springframework.stereotype.Component;
+
 import com.springboot.rest.entity.Invoice;
 
+@Component
 public class InvoiceUtil {
 
 	public Invoice CaluclateFinalAmountIncludingGST(Invoice inv) {
